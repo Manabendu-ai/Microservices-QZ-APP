@@ -12,14 +12,13 @@ import java.util.List;
 @Repository
 public interface QuesRepo extends MongoRepository<Question, String> {
 
-    @Aggregation(
-            pipeline = {
-                    "{$sample: {size :  ?0}}"
-            }
-    )
-    List<Question> findRandomQuestions(int n);
+
+    @Aggregation(pipeline = {"{$sample: {size :  ?0}}", "{ $sample: { size: ?0 } }", "{ $project: { questionId: 1, _id: 0 } }"})
+    List<QuestionIdOnly> findRandomQuestions(int n);
 
     @Query(value = "{'questionId' :  ?0}", fields = "{'answer' :  1}")
     AnswerOnly findAnswerByQuestionId(int id);
+
+    Question findQuestionByQuestionId(Integer id);
 }
 

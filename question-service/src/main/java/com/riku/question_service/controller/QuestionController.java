@@ -3,10 +3,13 @@ package com.riku.question_service.controller;
 
 
 import com.riku.question_service.model.Question;
+import com.riku.question_service.model.Responses;
 import com.riku.question_service.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /*
     Different Types of status code:
@@ -43,4 +46,21 @@ public class QuestionController {
     public ResponseEntity<?> addQuestion(@RequestBody Question question){
         return service.addQuestion(question);
     }
+
+    @GetMapping("/generate")
+    public ResponseEntity<?> generateQuestionsForQuiz(@RequestParam int numQ){
+        return service.generateQuestionsForQuiz(numQ);
+    }
+
+    @PostMapping("/getQuestions")
+    public ResponseEntity<?> getQuestionsByQuestionId(@RequestBody List<Integer> questionIds){
+        return service.getQuestionsByQuestionId(questionIds);
+    }
+
+    @PostMapping("/getScore")
+    public ResponseEntity<?> getScore(@RequestBody List<Responses> responses){
+        return service.getScore(responses);
+    }
+
+
 }

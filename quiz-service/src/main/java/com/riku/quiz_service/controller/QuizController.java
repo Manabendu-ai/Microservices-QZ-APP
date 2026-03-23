@@ -1,7 +1,9 @@
 package com.riku.quiz_service.controller;
 
-import com.riku.QuizzAPP.model.Responses;
-import com.riku.QuizzAPP.service.QuizService;
+
+import com.riku.quiz_service.dto.QuizDTO;
+import com.riku.quiz_service.model.Responses;
+import com.riku.quiz_service.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +19,9 @@ public class QuizController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createQuiz(
-            @RequestParam int numQ,
-            @RequestParam String title
+            @RequestBody QuizDTO quizDTO
     ){
-        return quizService.createQuiz(numQ, title);
+        return quizService.createQuiz(quizDTO.getNumQ(), quizDTO.getTitle());
     }
 
     @GetMapping("/get/{id}")

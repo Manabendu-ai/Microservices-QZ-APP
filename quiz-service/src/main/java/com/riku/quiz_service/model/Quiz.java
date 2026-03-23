@@ -14,6 +14,6 @@ public class Quiz {
     @Id
     private String id;
     private String name;
-    @DBRef
-    private List<Question>  questions;
+
+    private List<Integer>  questionIds;
 }

@@ -1,6 +1,6 @@
 package com.riku.quiz_service.repository;
 
-import com.riku.QuizzAPP.model.Quiz;
+import com.riku.quiz_service.model.Quiz;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

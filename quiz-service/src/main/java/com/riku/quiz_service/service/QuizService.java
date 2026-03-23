@@ -1,11 +1,13 @@
 package com.riku.quiz_service.service;
 
-import com.riku.QuizzAPP.model.Question;
-import com.riku.QuizzAPP.model.Quiz;
-import com.riku.QuizzAPP.model.Responses;
-import com.riku.QuizzAPP.repository.QuesRepo;
-import com.riku.QuizzAPP.repository.QuizRepo;
+import com.riku.quiz_service.feign.QuizInterface;
+import com.riku.quiz_service.model.Question;
+import com.riku.quiz_service.model.QuestionWrapper;
+import com.riku.quiz_service.model.Quiz;
+import com.riku.quiz_service.model.Responses;
+import com.riku.quiz_service.repository.QuizRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,27 +19,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 public class QuizService {
 
-    private final QuesRepo quesRepo;
-    private final QuestionService quesService;
     private final QuizRepo quizRepo;
 
-    public ResponseEntity<?> createQuiz(int numQ, String title){
-        List<Question> questions = quesRepo.findRandomQuestions(numQ);
+    private final QuizInterface quizInterface;
 
+    public ResponseEntity<?> createQuiz(int numQ, String title) {
+
+        List<Integer> questionIds = quizInterface.generateQuestionsForQuiz(numQ).getBody();
         Quiz quiz = new Quiz();
+        quiz.setQuestionIds(questionIds);
         quiz.setName(title);
-        quiz.setQuestions(questions);
-
-        return new ResponseEntity<>(quizRepo.save(quiz), HttpStatus.CREATED);
+        return  ResponseEntity.ok(quizRepo.save(quiz));
 
     }
 
     public ResponseEntity<?> getQuizById(String id) {
+
         try{
             Quiz quiz = quizRepo.findById(id).orElseThrow(
                     ()->new QuizNotFoundException(id)
             );
-            return new ResponseEntity<>(quiz, HttpStatus.OK);
+            return quizInterface.getQuestionsByQuestionId(quiz.getQuestionIds());
         } catch (QuizNotFoundException e){
             return new ResponseEntity<>(new Quiz(), HttpStatus.BAD_REQUEST);
         }
@@ -48,17 +50,7 @@ public class QuizService {
             Quiz quiz = quizRepo.findById(id).orElseThrow(
                     ()->new QuizNotFoundException(id)
             );
-
-
-            AtomicInteger score = new AtomicInteger();
-            responses.forEach(
-                    x-> {
-                        if(quesService.isCorrectMatch(x.getQuestionId(), x.getAnswer())){
-                            score.addAndGet(5);
-                        }
-                    }
-            );
-            return new ResponseEntity<>(score, HttpStatus.OK);
+            return quizInterface.getScore(responses);
         } catch (QuizNotFoundException e){
             return new ResponseEntity<>(new Quiz(), HttpStatus.BAD_REQUEST);
         }

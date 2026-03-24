@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @FeignClient("QUESTION-SERVICE")
-
 public interface QuizInterface {
     @GetMapping("/question/allQuestions")
     ResponseEntity<?> getAllQuestions();

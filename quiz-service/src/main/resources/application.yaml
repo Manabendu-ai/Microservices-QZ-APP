@@ -1,6 +1,6 @@
 spring:
   application:
-    name: quiz-service
+    name: QUIZ-SERVICE
 
   data:
     mongodb:

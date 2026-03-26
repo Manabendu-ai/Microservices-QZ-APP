@@ -1,7 +1,5 @@
 package com.riku.question_service.controller;
 
-
-
 import com.riku.question_service.model.Question;
 import com.riku.question_service.model.Responses;
 import com.riku.question_service.service.QuestionService;

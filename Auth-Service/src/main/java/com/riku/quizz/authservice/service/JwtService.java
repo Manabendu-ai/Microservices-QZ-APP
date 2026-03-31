@@ -24,6 +24,10 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public void validateToken(final String token) {
+        Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+    }
+
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
         return Jwts.builder()
                 .setClaims(extraClaims)

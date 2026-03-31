@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/auth")
 public class UserController {
     private final UserService service;
     private final AuthenticationManager authenticationManager;
@@ -40,5 +40,11 @@ public class UserController {
     @GetMapping("/greet/{name}")
     public ResponseEntity<String> greet(@PathVariable String name){
         return ResponseEntity.ok("Hello "+name);
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<String> validateToken(@RequestParam("token") String token) {
+        service.validateToken(token);
+        return ResponseEntity.ok("Token is valid");
     }
 }

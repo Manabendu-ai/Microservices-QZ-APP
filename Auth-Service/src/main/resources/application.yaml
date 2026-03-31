@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: Auth-Service
+
+  mongodb:
+    uri: mongodb://localhost:27017/quizzApp
+    database: quizzApp
+
+server:
+  port: 8088

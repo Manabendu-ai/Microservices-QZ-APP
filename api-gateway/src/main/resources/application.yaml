@@ -7,15 +7,24 @@ spring:
       server:
         webflux:
           routes:
+            - id: auth-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/auth/**
+
             - id: question-service
               uri: lb://QUESTION-SERVICE
               predicates:
                 - Path=/question/**
+              filters:
+                - AuthenticationFilter
 
             - id: quiz-service
               uri: lb://QUIZ-SERVICE
               predicates:
                 - Path=/quiz/**
+              filters:
+                - AuthenticationFilter
 
 server:
   port: 8085
